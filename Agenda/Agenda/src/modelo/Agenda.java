@@ -9,24 +9,24 @@ import dto.PersonaDTO;
 
 public class Agenda 
 {
-	private PersonaDAO persona;	
+	private static PersonaDAO persona;	
 	
 	public Agenda()
 	{
-		this.persona = new PersonaDAO();
+		persona = new PersonaDAO();
 	}
 	
 	public void agregarPersona(PersonaDTO nuevaPersona)
 	{
-		this.persona.insert(nuevaPersona);
+		persona.insert(nuevaPersona);
 	}
 
 	public void borrarPersona(PersonaDTO persona_a_eliminar) 
 	{
-		this.persona.delete(persona_a_eliminar);
+		persona.delete(persona_a_eliminar);
 	}
 	
-	public List<PersonaDTO> obtenerPersonas()
+	public static List<PersonaDTO> obtenerPersonas()
 	{
 		return persona.readAll();		
 	}

@@ -25,7 +25,7 @@ public class PersonaDAO
 			statement.setInt(1, persona.getIdPersona());
 			statement.setString(2, persona.getNombre());
 			statement.setString(3, persona.getTelefono());
-			if(statement.executeUpdate() > 0) //Si se ejecutó devuelvo true
+			if(statement.executeUpdate() > 0) //Si se ejecutï¿½ devuelvo true
 				return true;
 		} 
 		catch (SQLException e) 
@@ -48,7 +48,7 @@ public class PersonaDAO
 			statement = conexion.getSQLConexion().prepareStatement(delete);
 			statement.setString(1, Integer.toString(persona_a_eliminar.getIdPersona()));
 			chequeoUpdate = statement.executeUpdate();
-			if(chequeoUpdate > 0) //Si se ejecutó devuelvo true
+			if(chequeoUpdate > 0) //Si se ejecutï¿½ devuelvo true
 				return true;
 		} 
 		catch (SQLException e) 
@@ -62,7 +62,7 @@ public class PersonaDAO
 		return false;
 	}
 	
-	public List<PersonaDTO> readAll()
+	public static List<PersonaDTO> readAll()
 	{
 		PreparedStatement statement;
 		ResultSet resultSet; //Guarda el resultado de la query

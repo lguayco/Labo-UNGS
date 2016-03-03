@@ -36,6 +36,5 @@ public class ReporteAgenda
 		this.reporteViewer = new JasperViewer(this.reporteLleno);
 		this.reporteViewer.setVisible(true);
 	}
-        
-	
+   
 }	
