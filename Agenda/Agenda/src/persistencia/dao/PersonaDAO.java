@@ -66,7 +66,7 @@ public class PersonaDAO
 	{
 		PreparedStatement statement;
 		ResultSet resultSet; //Guarda el resultado de la query
-		ArrayList<PersonaDTO> personas = new ArrayList<>();
+		ArrayList<PersonaDTO> personas = new ArrayList<PersonaDTO>();
 		try 
 		{
 			statement = conexion.getSQLConexion().prepareStatement(readall);

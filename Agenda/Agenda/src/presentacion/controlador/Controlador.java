@@ -2,7 +2,11 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import modelo.Agenda;
 import presentacion.reportes.ReporteAgenda;
@@ -47,7 +51,6 @@ public class Controlador implements ActionListener
 			this.vista.show();
 		}
 		
-		@Override
 		public void actionPerformed(ActionEvent e) 
 		{
 			if(e.getSource() == this.vista.getBtnAgregar())
@@ -66,7 +69,7 @@ public class Controlador implements ActionListener
 				
 			}
 			else if(e.getSource() == this.vista.getBtnReporte())
-			{
+			{				
 				ReporteAgenda reporte = new ReporteAgenda(agenda.obtenerPersonas());
 				reporte.mostrar();				
 			}

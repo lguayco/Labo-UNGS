@@ -9,7 +9,7 @@ import dto.PersonaDTO;
 
 public class Agenda 
 {
-	private static PersonaDAO persona;	
+	private PersonaDAO persona;	
 	
 	public Agenda()
 	{
@@ -26,7 +26,7 @@ public class Agenda
 		persona.delete(persona_a_eliminar);
 	}
 	
-	public static List<PersonaDTO> obtenerPersonas()
+	public List<PersonaDTO> obtenerPersonas()
 	{
 		return persona.readAll();		
 	}

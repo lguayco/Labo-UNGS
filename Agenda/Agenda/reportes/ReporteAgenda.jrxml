@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-01-28T08:30:16 -->
+<!-- 2016-03-06T22:23:14 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="284e0c88-a4b2-4ff8-98a2-d67b80bcffaf">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="Fecha" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[]]>
 	</queryString>
@@ -25,6 +26,14 @@
 						<font size="18"/>
 					</textElement>
 					<text><![CDATA[Reporte de personas]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="489" y="2" width="56" height="20" uuid="0706116d-f632-4605-96d8-35fe765b5d67"/>
+					<textFieldExpression><![CDATA[$P{Fecha}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="390" y="2" width="102" height="20" uuid="4c9394fa-e0b1-4d17-9e4d-cc7deafc6164"/>
+					<text><![CDATA[Reporte generado el:]]></text>
 				</staticText>
 			</frame>
 		</band>
@@ -64,11 +73,11 @@
 	<detail>
 		<band height="21" splitType="Stretch">
 			<textField>
-				<reportElement x="5" y="0" width="68" height="18" uuid="4a345b01-b751-4529-b6d6-2ccf3c13ff66"/>
+				<reportElement x="5" y="0" width="225" height="18" uuid="4a345b01-b751-4529-b6d6-2ccf3c13ff66"/>
 				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="285" y="1" width="66" height="18" uuid="dd3f7d4c-c2c3-4ee6-8d98-1b88fe0228ec"/>
+				<reportElement x="285" y="1" width="215" height="18" uuid="dd3f7d4c-c2c3-4ee6-8d98-1b88fe0228ec"/>
 				<textFieldExpression><![CDATA[$F{telefono}]]></textFieldExpression>
 			</textField>
 		</band>
