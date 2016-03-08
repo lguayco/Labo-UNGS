@@ -16,6 +16,7 @@ public class VentanaPersona extends JFrame
 	private JPanel contentPane;
 	private JTextField txtNombre;
 	private JTextField txtTelefono;
+	private JTextField txtLocalidad;
 	private JButton btnAgregarPersona;
 	private Controlador controlador;
 
@@ -25,14 +26,14 @@ public class VentanaPersona extends JFrame
 		this.controlador = controlador;
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 343, 183);
+		setBounds(100, 100, 343, 222);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 11, 307, 123);
+		panel.setBounds(10, 11, 307, 173);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -56,8 +57,17 @@ public class VentanaPersona extends JFrame
 		
 		btnAgregarPersona = new JButton("Agregar");
 		btnAgregarPersona.addActionListener(this.controlador);
-		btnAgregarPersona.setBounds(208, 92, 89, 23);
+		btnAgregarPersona.setBounds(208, 139, 89, 23);
 		panel.add(btnAgregarPersona);
+		
+		txtLocalidad = new JTextField();
+		txtLocalidad.setColumns(10);
+		txtLocalidad.setBounds(133, 90, 164, 20);
+		panel.add(txtLocalidad);
+		
+		JLabel lblLocalidad = new JLabel("Localidad");
+		lblLocalidad.setBounds(10, 93, 113, 14);
+		panel.add(lblLocalidad);
 		
 		this.setVisible(true);
 	}
@@ -77,5 +87,9 @@ public class VentanaPersona extends JFrame
 		return btnAgregarPersona;
 	}
 	
+	public JTextField getTxtLocalidad() 
+	{
+		return txtLocalidad;
+	}
 }
 

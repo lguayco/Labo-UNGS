@@ -11,7 +11,7 @@ import dto.PersonaDTO;
 
 public class PersonaDAO 
 {
-	private static final String insert = "INSERT INTO personas(idPersona, nombre, telefono) VALUES(?, ?, ?)";
+	private static final String insert = "INSERT INTO personas(idPersona, nombre, telefono, Localidad) VALUES(?, ?, ?, ?)";
 	private static final String delete = "DELETE FROM personas WHERE idPersona = ?";
 	private static final String readall = "SELECT * FROM personas";
 	private static final Conexion conexion = Conexion.getConexion();
@@ -25,6 +25,7 @@ public class PersonaDAO
 			statement.setInt(1, persona.getIdPersona());
 			statement.setString(2, persona.getNombre());
 			statement.setString(3, persona.getTelefono());
+			statement.setString(4, persona.getLocalidad());
 			if(statement.executeUpdate() > 0) //Si se ejecut� devuelvo true
 				return true;
 		} 
@@ -74,7 +75,10 @@ public class PersonaDAO
 			
 			while(resultSet.next())
 			{
-				personas.add(new PersonaDTO(resultSet.getInt("idPersona"), resultSet.getString("Nombre"), resultSet.getString("Telefono")));
+				personas.add(new PersonaDTO(resultSet.getInt("idPersona"),
+						resultSet.getString("Nombre"), 
+						resultSet.getString("Telefono"),
+						resultSet.getString("Localidad")));
 			}
 		} 
 		catch (SQLException e) 

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-03-06T22:23:14 -->
+<!-- 2016-03-06T21:50:25 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="284e0c88-a4b2-4ff8-98a2-d67b80bcffaf">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-	<parameter name="Fecha" class="java.lang.String"/>
+	<parameter name="Fecha" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{Fecha}]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[]]>
 	</queryString>
@@ -13,6 +15,32 @@
 	<field name="nombre" class="java.lang.String">
 		<fieldDescription><![CDATA[nombre]]></fieldDescription>
 	</field>
+	<field name="localidad" class="java.lang.String">
+		<fieldDescription><![CDATA[localidad]]></fieldDescription>
+	</field>
+	<group name="grupoLocalidad">
+		<groupExpression><![CDATA[$F{localidad}]]></groupExpression>
+		<groupHeader>
+			<band height="25">
+				<textField>
+					<reportElement mode="Opaque" x="3" y="0" width="549" height="20" backcolor="#E8E1E1" uuid="46855414-926a-4e88-814e-cc3c91365fe1"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{localidad}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="14"/>
+		</groupFooter>
+	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -27,15 +55,11 @@
 					</textElement>
 					<text><![CDATA[Reporte de personas]]></text>
 				</staticText>
-				<textField>
-					<reportElement x="489" y="2" width="56" height="20" uuid="0706116d-f632-4605-96d8-35fe765b5d67"/>
-					<textFieldExpression><![CDATA[$P{Fecha}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="390" y="2" width="102" height="20" uuid="4c9394fa-e0b1-4d17-9e4d-cc7deafc6164"/>
-					<text><![CDATA[Reporte generado el:]]></text>
-				</staticText>
 			</frame>
+			<textField>
+				<reportElement x="480" y="-21" width="75" height="19" uuid="1c4fbe11-ccb3-4d5d-a6af-9e6e1047b563"/>
+				<textFieldExpression><![CDATA[$P{Fecha}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -46,11 +70,15 @@
 					<reportElement x="3" y="2" width="160" height="20" uuid="8bd693bf-e003-4042-a1f8-881763b9ba1e"/>
 					<text><![CDATA[Reporte para el ejemplo Agenda]]></text>
 				</staticText>
+				<staticText>
+					<reportElement x="370" y="-70" width="110" height="20" uuid="7c8c6178-af95-47ff-bad7-ebc0fe4a88f2"/>
+					<text><![CDATA[Reporte generado el:]]></text>
+				</staticText>
 			</frame>
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="31" splitType="Stretch">
+		<band height="29" splitType="Stretch">
 			<frame>
 				<reportElement x="2" y="6" width="550" height="23" uuid="23209a62-cc9d-4b81-8e93-aa9cc3a92b36"/>
 				<staticText>
@@ -65,7 +93,7 @@
 					<textElement textAlignment="Center">
 						<font size="14"/>
 					</textElement>
-					<text><![CDATA[Teléfono]]></text>
+					<text><![CDATA[Tel]]></text>
 				</staticText>
 			</frame>
 		</band>
@@ -73,11 +101,11 @@
 	<detail>
 		<band height="21" splitType="Stretch">
 			<textField>
-				<reportElement x="5" y="0" width="225" height="18" uuid="4a345b01-b751-4529-b6d6-2ccf3c13ff66"/>
+				<reportElement x="5" y="0" width="255" height="18" uuid="4a345b01-b751-4529-b6d6-2ccf3c13ff66"/>
 				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="285" y="1" width="215" height="18" uuid="dd3f7d4c-c2c3-4ee6-8d98-1b88fe0228ec"/>
+				<reportElement x="285" y="1" width="195" height="18" uuid="dd3f7d4c-c2c3-4ee6-8d98-1b88fe0228ec"/>
 				<textFieldExpression><![CDATA[$F{telefono}]]></textFieldExpression>
 			</textField>
 		</band>
@@ -90,7 +118,7 @@
 			<textField>
 				<reportElement x="355" y="0" width="100" height="30" uuid="5ce007da-8e81-48b7-91fd-8e603c20d7ef"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Pagina " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
 				<reportElement x="455" y="0" width="100" height="30" uuid="52b869cb-a151-48f6-ad3c-3147a8d111e8"/>
