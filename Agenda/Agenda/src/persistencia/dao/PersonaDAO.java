@@ -62,7 +62,7 @@ public class PersonaDAO
 		return false;
 	}
 	
-	public static List<PersonaDTO> readAll()
+	public List<PersonaDTO> readAll()
 	{
 		PreparedStatement statement;
 		ResultSet resultSet; //Guarda el resultado de la query
