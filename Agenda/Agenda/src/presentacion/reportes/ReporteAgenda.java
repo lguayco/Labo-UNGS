@@ -1,10 +1,8 @@
 package presentacion.reportes;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -20,18 +18,17 @@ public class ReporteAgenda
 	private JasperReport reporte;
 	private JasperViewer reporteViewer;
 	private JasperPrint	reporteLleno;
-	
-	//Recibe la lista de personas para armar el reporte
-    public ReporteAgenda(List<PersonaDTO> personas)
+	private Map parametersMap;
+ 
+	//Recibe la lista de personas y un mapa con los parámetros que serán enviados 
+	//al reporte.
+	public ReporteAgenda(List<PersonaDTO> personas,Map<String,Object> params)
     {
-    	//Hardcodeado
-		Map<String, Object> parametersMap = new HashMap<String, Object>();
-		parametersMap.put("Fecha", new SimpleDateFormat("dd/MM/yyyy").format(new Date()));		
-    	try		{
-    		
+    	try 
+		{
+    		this.parametersMap=params;
 			this.reporte = (JasperReport) JRLoader.loadObjectFromFile( "reportes\\ReporteAgenda.jasper" );
-			this.reporteLleno = JasperFillManager.fillReport(this.reporte, parametersMap, 
-					new JRBeanCollectionDataSource(personas));
+			this.reporteLleno = JasperFillManager.fillReport(this.reporte, parametersMap, new JRBeanCollectionDataSource(personas));
 		}
 		catch( JRException ex ) 
 		{
@@ -41,6 +38,7 @@ public class ReporteAgenda
     
     public void mostrar()
 	{
+  	
 		this.reporteViewer = new JasperViewer(this.reporteLleno,false);
 		this.reporteViewer.setVisible(true);
 	}

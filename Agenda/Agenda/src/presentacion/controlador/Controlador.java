@@ -2,7 +2,13 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import modelo.Agenda;
 import presentacion.reportes.ReporteAgenda;
 import presentacion.vista.VentanaPersona;
@@ -40,7 +46,7 @@ public class Controlador implements ActionListener
 			this.personas_en_tabla = agenda.obtenerPersonas();
 			for (int i = 0; i < this.personas_en_tabla.size(); i ++)
 			{
-				Object[] fila = {this.personas_en_tabla.get(i).getNombre(), this.personas_en_tabla.get(i).getTelefono()};
+				Object[] fila = {this.personas_en_tabla.get(i).getNombre(), this.personas_en_tabla.get(i).getTelefono(), this.personas_en_tabla.get(i).getLocalidad()};
 				this.vista.getModelPersonas().addRow(fila);
 			}
 			this.vista.show();
@@ -64,8 +70,11 @@ public class Controlador implements ActionListener
 				
 			}
 			else if(e.getSource() == this.vista.getBtnReporte())
-			{				
-				ReporteAgenda reporte = new ReporteAgenda(agenda.obtenerPersonas());
+			{
+				Map<String, Object> parametersMap = new HashMap<String, Object>();
+				parametersMap.put("Fecha", new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+				
+				ReporteAgenda reporte = new ReporteAgenda(agenda.obtenerPersonas(), parametersMap);
 				reporte.mostrar();				
 			}
 			else if(e.getSource() == this.ventanaPersona.getBtnAgregarPersona())

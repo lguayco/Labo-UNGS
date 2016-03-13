@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-03-06T21:50:25 -->
+<!-- 2016-03-13T13:19:36 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="284e0c88-a4b2-4ff8-98a2-d67b80bcffaf">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="Fecha" class="java.lang.String">
 		<defaultValueExpression><![CDATA[$P{Fecha}]]></defaultValueExpression>
 	</parameter>
+	<parameter name="cantContactos" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[]]>
 	</queryString>
@@ -38,7 +39,17 @@
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="14"/>
+			<band height="26">
+				<textField>
+					<reportElement x="450" y="2" width="100" height="19" uuid="80e77063-1c78-431c-927f-5e4b01645854"/>
+					<textFieldExpression><![CDATA[$V{grupoLocalidad_COUNT}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="400" y="2" width="40" height="21" uuid="8df94d8c-f1e3-431b-a82c-25495765046f"/>
+					<text><![CDATA[Total:
+]]></text>
+				</staticText>
+			</band>
 		</groupFooter>
 	</group>
 	<background>
@@ -99,22 +110,22 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="21" splitType="Stretch">
+		<band height="23" splitType="Stretch">
 			<textField>
 				<reportElement x="5" y="0" width="255" height="18" uuid="4a345b01-b751-4529-b6d6-2ccf3c13ff66"/>
 				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="285" y="1" width="195" height="18" uuid="dd3f7d4c-c2c3-4ee6-8d98-1b88fe0228ec"/>
+				<reportElement x="285" y="1" width="175" height="18" uuid="dd3f7d4c-c2c3-4ee6-8d98-1b88fe0228ec"/>
 				<textFieldExpression><![CDATA[$F{telefono}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="7" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="33" splitType="Stretch">
+		<band height="35" splitType="Stretch">
 			<textField>
 				<reportElement x="355" y="0" width="100" height="30" uuid="5ce007da-8e81-48b7-91fd-8e603c20d7ef"/>
 				<textElement textAlignment="Right"/>
@@ -127,4 +138,38 @@
 			</textField>
 		</band>
 	</pageFooter>
+	<summary>
+		<band height="224">
+			<barChart>
+				<chart evaluationTime="Report">
+					<reportElement x="120" y="24" width="290" height="166" uuid="ef564506-6aee-473e-ab33-9c1635f34cf7"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{localidad}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{localidad}]]></categoryExpression>
+						<valueExpression><![CDATA[$V{grupoLocalidad_COUNT}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+			<staticText>
+				<reportElement x="120" y="10" width="290" height="14" uuid="a6c429a7-92fd-42cc-ae30-b1f3b560f527"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none"/>
+				<text><![CDATA[Cantidad de contactos por localidad]]></text>
+			</staticText>
+		</band>
+	</summary>
 </jasperReport>
