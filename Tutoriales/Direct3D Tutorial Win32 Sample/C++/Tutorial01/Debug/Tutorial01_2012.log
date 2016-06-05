@@ -1,0 +1,14 @@
+﻿Compilación iniciada a las 21/04/2016 9:50:00.
+     1>Proyecto "D:\Mis cosas\Beca Investigacion\Direct3D Tutorial Win32 Sample\C++\Tutorial01\Tutorial01_2012.vcxproj" en el nodo 2 (Build destinos).
+     1>ClCompile:
+         D:\Visual Studio 2013\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oi /Oy- /D WIN32 /D _DEBUG /D DEBUG /D PROFILE /D _WINDOWS /D _WIN32_WINNT=0x0600 /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /arch:SSE2 /fp:fast /Zc:wchar_t /Zc:forScope /openmp- /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt  Tutorial01.cpp
+         Tutorial01.cpp
+       Link:
+         D:\Visual Studio 2013\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Mis cosas\Beca Investigacion\Direct3D Tutorial Win32 Sample\C++\Debug\Tutorial01.exe" /INCREMENTAL /NOLOGO d3d11.lib d3dcompiler.lib dxguid.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"D:\Visual Studio 2013\VC\Include\Manifest\dpiaware.manifest" /DEBUG /PDB:"D:\Mis cosas\Beca Investigacion\Direct3D Tutorial Win32 Sample\C++\Debug\Tutorial01.pdb" /SUBSYSTEM:WINDOWS /LARGEADDRESSAWARE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Mis cosas\Beca Investigacion\Direct3D Tutorial Win32 Sample\C++\Debug\Tutorial01.lib" /MACHINE:X86 /SAFESEH  Debug\Tutorial01.res
+         Debug\Tutorial01.obj
+         Tutorial01_2012.vcxproj -> D:\Mis cosas\Beca Investigacion\Direct3D Tutorial Win32 Sample\C++\Debug\Tutorial01.exe
+     1>Compilación del proyecto terminada "D:\Mis cosas\Beca Investigacion\Direct3D Tutorial Win32 Sample\C++\Tutorial01\Tutorial01_2012.vcxproj" (Build destinos).
+
+Compilación correcta.
+
+Tiempo transcurrido 00:00:07.71
