@@ -77,7 +77,7 @@ ID3D11SamplerState*                 g_pSamplerLinear = nullptr;
 XMMATRIX                            g_World;
 XMMATRIX                            g_View;
 XMMATRIX                            g_Projection;
-XMFLOAT4                            g_vMeshColor( 0.7f, 0.7f, 0.7f, 1.0f );
+XMFLOAT4                            g_vMeshColor( 0.0f, 0.0f, 0.0f, 0.5f );
 
 
 //--------------------------------------------------------------------------------------
@@ -379,6 +379,26 @@ HRESULT InitDevice()
 
     g_pImmediateContext->OMSetRenderTargets( 1, &g_pRenderTargetView, g_pDepthStencilView );
 
+	// Setup Blending State
+	ID3D11BlendState* g_pBlendStateBlend = NULL;
+
+	D3D11_BLEND_DESC BlendState;
+	ZeroMemory(&BlendState, sizeof(D3D11_BLEND_DESC));
+	BlendState.RenderTarget[0].BlendEnable = TRUE;
+	BlendState.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	BlendState.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	BlendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+	BlendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	BlendState.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	BlendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	BlendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	g_pd3dDevice->CreateBlendState(&BlendState, &g_pBlendStateBlend);
+
+	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	UINT sampleMask   = 0xffffffff;
+
+	g_pImmediateContext->OMSetBlendState(g_pBlendStateBlend, blendFactor, sampleMask);
+	
     // Setup the viewport
     D3D11_VIEWPORT vp;
     vp.Width = (FLOAT)width;
@@ -675,10 +695,17 @@ void Render()
     // Rotate cube around the origin
     g_World = XMMatrixRotationY( t );
 
+	XMMATRIX g_World2 = XMMatrixScaling(0.3,0.3,0.3) * XMMatrixTranslation(-1.0,0.0,5.0);
+	XMFLOAT4 g_vMeshColor2( 1.0f, 1.0f, 1.0f, 1.0f );
+
+	XMMATRIX g_World3 = XMMatrixScaling(0.3,0.3,0.3) * XMMatrixTranslation(1.0,0.0,5.0);
+	XMFLOAT4 g_vMeshColor3( 1.0f, 1.0f, 1.0f, 1.0f );
+
     //// Modify the color   Agus: No entiendo qué hace esto, cada linea pone colores para x,y,z entonces por qué cambia todo descomentando una soa linea?
-    g_vMeshColor.x = ( sinf( t * 1.0f ) + 1.0f ) * 0.5f;
-    g_vMeshColor.y = ( cosf( t * 3.0f ) + 1.0f ) * 0.5f;
-    g_vMeshColor.z = ( sinf( t * 5.0f ) + 1.0f ) * 0.5f;
+    g_vMeshColor.x = 1.0f;//( sinf( t * 1.0f ) + 1.0f ) * 0.5f;
+    g_vMeshColor.y = 1.0;//( cosf( t * 3.0f ) + 1.0f ) * 0.5f;
+    g_vMeshColor.z = 1.0f;//( sinf( t * 5.0f ) + 1.0f ) * 0.5f;
+	g_vMeshColor.w = 0.5f; //semitransparente
 
     //
     // Clear the back buffer
@@ -690,16 +717,40 @@ void Render()
     //
     g_pImmediateContext->ClearDepthStencilView( g_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
 
-    //
-    // Update variables that change once per frame
-    //
     CBChangesEveryFrame cb;
+			
+			//
+			// Update variables that change once per frame DEL CUBO ORIGINAL
+			//
+			
+			cb.mWorld = XMMatrixTranspose( g_World2 );
+			cb.vMeshColor = g_vMeshColor2;
+			g_pImmediateContext->UpdateSubresource( g_pCBChangesEveryFrame, 0, nullptr, &cb, 0, 0 );
+
+			//
+			// Render the original original cube
+			//
+			g_pImmediateContext->VSSetShader( g_pVertexShader, nullptr, 0 );
+			g_pImmediateContext->VSSetConstantBuffers( 0, 1, &g_pCBNeverChanges );
+			g_pImmediateContext->VSSetConstantBuffers( 1, 1, &g_pCBChangeOnResize );
+			g_pImmediateContext->VSSetConstantBuffers( 2, 1, &g_pCBChangesEveryFrame );
+			g_pImmediateContext->PSSetShader( g_pPixelShader, nullptr, 0 );
+			g_pImmediateContext->PSSetConstantBuffers( 2, 1, &g_pCBChangesEveryFrame );
+			g_pImmediateContext->PSSetShaderResources( 0, 1, &g_pTextureRV );
+			g_pImmediateContext->PSSetSamplers( 0, 1, &g_pSamplerLinear );
+			g_pImmediateContext->DrawIndexed( 36, 0, 0 );
+
+	
+	//
+    // Update variables that change once per frame DEL CUBO ORIGINAL
+    //
+    //CBChangesEveryFrame cb;
     cb.mWorld = XMMatrixTranspose( g_World );
     cb.vMeshColor = g_vMeshColor;
     g_pImmediateContext->UpdateSubresource( g_pCBChangesEveryFrame, 0, nullptr, &cb, 0, 0 );
 
     //
-    // Render the cube
+    // Render the original original cube
     //
     g_pImmediateContext->VSSetShader( g_pVertexShader, nullptr, 0 );
     g_pImmediateContext->VSSetConstantBuffers( 0, 1, &g_pCBNeverChanges );
@@ -710,6 +761,29 @@ void Render()
     g_pImmediateContext->PSSetShaderResources( 0, 1, &g_pTextureRV );
     g_pImmediateContext->PSSetSamplers( 0, 1, &g_pSamplerLinear );
     g_pImmediateContext->DrawIndexed( 36, 0, 0 );
+
+		//
+			// Update variables that change once per frame DEL CUBO ORIGINAL
+			//
+			
+			cb.mWorld = XMMatrixTranspose( g_World3 );
+			cb.vMeshColor = g_vMeshColor3;
+			g_pImmediateContext->UpdateSubresource( g_pCBChangesEveryFrame, 0, nullptr, &cb, 0, 0 );
+
+			//
+			// Render the original original cube
+			//
+			g_pImmediateContext->VSSetShader( g_pVertexShader, nullptr, 0 );
+			g_pImmediateContext->VSSetConstantBuffers( 0, 1, &g_pCBNeverChanges );
+			g_pImmediateContext->VSSetConstantBuffers( 1, 1, &g_pCBChangeOnResize );
+			g_pImmediateContext->VSSetConstantBuffers( 2, 1, &g_pCBChangesEveryFrame );
+			g_pImmediateContext->PSSetShader( g_pPixelShader, nullptr, 0 );
+			g_pImmediateContext->PSSetConstantBuffers( 2, 1, &g_pCBChangesEveryFrame );
+			g_pImmediateContext->PSSetShaderResources( 0, 1, &g_pTextureRV );
+			g_pImmediateContext->PSSetSamplers( 0, 1, &g_pSamplerLinear );
+			g_pImmediateContext->DrawIndexed( 36, 0, 0 );
+	
+	
 
     //
     // Present our back buffer to our front buffer
