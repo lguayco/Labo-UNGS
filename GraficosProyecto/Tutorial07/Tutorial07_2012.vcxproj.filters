@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns:atg="http://atg.xbox.com" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{8e114980-c1a3-4ada-ad7c-83caadf5daeb}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{2c3d4c8c-5d1a-459a-a05a-a4e4b608a44e}</UniqueIdentifier>
+      <Extensions>fx;fxh;hlsl</Extensions>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{ae9291bb-711b-4b28-b07a-a32e7b9778a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View">
+      <UniqueIdentifier>{e8532f6c-f0fb-4e42-9b38-120b529c32e0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DDSTextureLoader.cpp" />
+    <ClCompile Include="Camera.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="CamaraView.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="BillboardView.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="BillBoard.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="PosableObject.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Device.cpp" />
+    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CLInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </CLInclude>
+    <ResourceCompile Include="Tutorial07.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+    <ClInclude Include="DDSTextureLoader.h" />
+    <ClInclude Include="Camera.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="CamaraView.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="BillboardView.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="BillBoard.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="PosableObject.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Device.h" />
+    <ClInclude Include="Window.h" />
+    <ClInclude Include="Mesh.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Main.fx">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Main_PS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Main_VS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="seafloor.dds">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
