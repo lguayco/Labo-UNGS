@@ -186,6 +186,8 @@ Device::Device(Window* mi_window)
     vp.TopLeftY = 0;
     g_pImmediateContext->RSSetViewports( 1, &vp );
 
+
+
 }
 
 
@@ -223,82 +225,26 @@ void Device::Render(Scene* scene)
 
 	/////****************** seteo a partir de la camara de la escena
 	
-	// Initialize the view matrix
-    /*XMVECTOR Eye = XMVectorSet( 0.0f, 3.0f, -6.0f, 0.0f );
-    XMVECTOR At = XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
-    XMVECTOR Up = XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );*/
+	// calculo the view matrix
+    
 	XMVECTOR Eye = XMVectorSet( scene->la_camara->position.x, scene->la_camara->position.y, scene->la_camara->position.z, 0.0f );
     XMVECTOR At = XMVectorSet( scene->la_camara->at_point.x, scene->la_camara->at_point.y, scene->la_camara->at_point.z, 0.0f );
     XMVECTOR Up = XMVectorSet( scene->la_camara->up_dir.x, scene->la_camara->up_dir.y, scene->la_camara->up_dir.z, 0.0f );
-    g_View = XMMatrixLookAtLH( Eye, At, Up );
-
-    CBNeverChanges cbNeverChanges;
-    cbNeverChanges.mView = XMMatrixTranspose( g_View );
-    g_pImmediateContext->UpdateSubresource( g_pCBNeverChanges, 0, nullptr, &cbNeverChanges, 0, 0 );
+    DirectX::XMMATRIX g_View = XMMatrixLookAtLH( Eye, At, Up );
 
     // Initialize the projection matrix
-	g_Projection = XMMatrixPerspectiveFovLH( scene->la_camara->angulo_de_vision_y, scene->la_camara->ancho / (FLOAT)scene->la_camara->alto, 0.1f, 100.0f );
+	DirectX::XMMATRIX g_Projection = XMMatrixPerspectiveFovLH( scene->la_camara->angulo_de_vision_y, scene->la_camara->ancho / (FLOAT)scene->la_camara->alto, 0.1f, 100.0f );
     
-
 	////////////// **** lo que se hace para cada objeto/billboard
 
-
-
-	DirectX::XMFLOAT4  g_vMeshColor( 0.7f, 0.7f, 0.7f, 1.0f );
-
-    // Update our time
-    static float t = 0.0f;
-    if( g_driverType == D3D_DRIVER_TYPE_REFERENCE )
-    {
-        t += ( float )XM_PI * 0.0125f;
-    }
-    else
-    {
-        static ULONGLONG timeStart = 0;
-        ULONGLONG timeCur = GetTickCount64();
-        if( timeStart == 0 )
-            timeStart = timeCur;
-        t = ( timeCur - timeStart ) / 1000.0f;
-    }
-
-    // Rotate cube around the origin
-    g_World = XMMatrixRotationY( t );
-
-    //// Modify the color   Agus: No entiendo qué hace esto, cada linea pone colores para x,y,z entonces por qué cambia todo descomentando una soa linea?
-    g_vMeshColor.x = ( sinf( t * 1.0f ) + 1.0f ) * 0.5f;
-    g_vMeshColor.y = ( cosf( t * 3.0f ) + 1.0f ) * 0.5f;
-    g_vMeshColor.z = ( sinf( t * 5.0f ) + 1.0f ) * 0.5f;
-
-    //
-    // Update variables that change once per frame
-    //
-    CBChangesEveryFrame cb;
-    cb.mWorld = XMMatrixTranspose( g_World );
-    cb.vMeshColor = g_vMeshColor;
-    g_pImmediateContext->UpdateSubresource( g_pCBChangesEveryFrame, 0, nullptr, &cb, 0, 0 );
-
-
 	
-	/////****************** prepara pipeline para dibujar
-
-    CBChangeOnResize cbChangesOnResize;
-    cbChangesOnResize.mProjection = XMMatrixTranspose( g_Projection );
-    g_pImmediateContext->UpdateSubresource( g_pCBChangeOnResize, 0, nullptr, &cbChangesOnResize, 0, 0 );
+    XMVECTOR PosBillboard = XMVectorSet( scene->el_billboard->position.x, scene->el_billboard->position.y, scene->el_billboard->position.z, 0.0f );
+    XMVECTOR AtBillboard = XMVectorSet( scene->el_billboard->at_point.x, scene->el_billboard->at_point.y, scene->el_billboard->at_point.z, 0.0f );
+    XMVECTOR UpBillboard = XMVectorSet( scene->el_billboard->up_dir.x, scene->el_billboard->up_dir.y, scene->el_billboard->up_dir.z, 0.0f );
+    DirectX::XMMATRIX g_World = XMMatrixLookAtLH( Eye, At, Up );
 	
-    //
-    // Render the cube
-    //
-    g_pImmediateContext->VSSetShader( g_pVertexShader, nullptr, 0 );
-    g_pImmediateContext->VSSetConstantBuffers( 0, 1, &g_pCBNeverChanges );
-    g_pImmediateContext->VSSetConstantBuffers( 1, 1, &g_pCBChangeOnResize );
-    g_pImmediateContext->VSSetConstantBuffers( 2, 1, &g_pCBChangesEveryFrame );
-    g_pImmediateContext->PSSetShader( g_pPixelShader, nullptr, 0 );
-    g_pImmediateContext->PSSetConstantBuffers( 2, 1, &g_pCBChangesEveryFrame );
-	g_pImmediateContext->PSSetShaderResources( 0, 1, &scene->el_billboard->textura );
-    g_pImmediateContext->PSSetSamplers( 0, 1, &g_pSamplerLinear );
-    g_pImmediateContext->DrawIndexed( 36, 0, 0 );
-
-	/// aca termina por  cada objeto.....
+	// dibujo cada objeto a traves de su mesh
+	scene->el_billboard->mesh->renderObject(g_World, g_View, g_Projection, scene->el_billboard->textura, this);
 
 
     //AL FINAL SOLO RESTA....

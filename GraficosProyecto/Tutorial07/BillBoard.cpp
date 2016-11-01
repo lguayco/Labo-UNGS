@@ -14,10 +14,15 @@ char path_imagen[1000];
 
 
 BillBoard::BillBoard()
-{
+{	
 }
 
 
 BillBoard::~BillBoard()
 {
+}
+
+void BillBoard::setMesh(Mesh* m)
+{
+	this->mesh = m;
 }

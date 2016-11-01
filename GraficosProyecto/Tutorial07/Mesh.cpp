@@ -1,95 +1,27 @@
 #include "Mesh.h"
 #include <windows.h>
-#include <d3d11_1.h>
 #include <d3dcompiler.h>
 #include <directxmath.h>
 #include <directxcolors.h>
 #include "DDSTextureLoader.h"
 #include "resource.h"
+#include "Device.h"
 using namespace DirectX;
 
-Mesh::Mesh()
+Mesh::Mesh(Device* device)
 {
+	this->InitMesh(device);
 }
-
 
 Mesh::~Mesh()
 {
 }
 
-
-//--------------------------------------------------------------------------------------
-// Structures
-//--------------------------------------------------------------------------------------
-struct SimpleVertex
+HRESULT Mesh::InitMesh(Device* device)
 {
-	XMFLOAT3 Pos;
-	XMFLOAT2 Tex;
-};
-
-struct CBNeverChanges
-{
-	XMMATRIX mView;
-};
-
-struct CBChangeOnResize
-{
-	XMMATRIX mProjection;
-};
-
-struct CBChangesEveryFrame
-{
-	XMMATRIX mWorld;
-	XMFLOAT4 vMeshColor;
-};
-
-ID3D11Device* g_pd3dDevice = nullptr;
-ID3D11Buffer* g_pIndexBuffer = nullptr;
-ID3D11VertexShader* g_pVertexShader = nullptr;
-ID3D11InputLayout*  g_pVertexLayout = nullptr;
-ID3D11Buffer* g_pVertexBuffer = nullptr;
-ID3D11DeviceContext* g_pImmediateContext = nullptr;
-ID3D11PixelShader* g_pPixelShader = nullptr;
-ID3D11Buffer* g_pCBNeverChanges = nullptr;
-ID3D11Buffer* g_pCBChangeOnResize = nullptr;
-ID3D11Buffer* g_pCBChangesEveryFrame = nullptr;
-D3D_DRIVER_TYPE g_driverType = D3D_DRIVER_TYPE_NULL;
-ID3D11RenderTargetView* g_pRenderTargetView = nullptr;
-ID3D11DepthStencilView* g_pDepthStencilView = nullptr;
-ID3D11ShaderResourceView* g_pTextureRV = nullptr;
-ID3D11SamplerState* g_pSamplerLinear = nullptr;
-IDXGISwapChain* g_pSwapChain = nullptr;
-XMMATRIX g_World;
-XMFLOAT4 g_vMeshColor(0.7f, 0.7f, 0.7f, 1.0f);
-XMMATRIX g_View;
-XMMATRIX g_Projection;
-HWND g_hWnd = nullptr;
-
-
-
-
-//--------------------------------------------------------------------------------------
-// Declaracion
-//--------------------------------------------------------------------------------------
-HRESULT InitMesh();
-
-
-//--------------------------------------------------------------------------------------
-// Register class and create window
-//--------------------------------------------------------------------------------------
-
-HRESULT InitMesh()
-{
-	RECT rc;
-	GetClientRect(g_hWnd, &rc);
-	UINT width = rc.right - rc.left;
-	UINT height = rc.bottom - rc.top;
-
 	// Compile the vertex shader
 	ID3DBlob* pVSBlob = nullptr;
 	HRESULT hr = CompileShaderFromFile(L"Main.fx", "VS", "vs_4_0", &pVSBlob);
-	
-	
 	
 	if (FAILED(hr))
 	{
@@ -99,7 +31,7 @@ HRESULT InitMesh()
 	}
 
 	// Create the vertex shader
-	hr = g_pd3dDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &g_pVertexShader);
+	hr = device->g_pd3dDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &g_pVertexShader);
 	if (FAILED(hr))
 	{
 		pVSBlob->Release();
@@ -115,15 +47,13 @@ HRESULT InitMesh()
 	UINT numElements = ARRAYSIZE(layout);
 
 	// Create the input layout
-	hr = g_pd3dDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
+	hr = device->g_pd3dDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
 		pVSBlob->GetBufferSize(), &g_pVertexLayout);
 	pVSBlob->Release();
 	if (FAILED(hr))
 		throw hr;
 
-	// Set the input layout
-	g_pImmediateContext->IASetInputLayout(g_pVertexLayout);
-
+	
 	// Compile the pixel shader
 	ID3DBlob* pPSBlob = nullptr;
 	hr = CompileShaderFromFile(L"Main.fx", "PS", "ps_4_0", &pPSBlob);
@@ -135,7 +65,7 @@ HRESULT InitMesh()
 	}
 
 	// Create the pixel shader
-	hr = g_pd3dDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &g_pPixelShader);
+	hr = device->g_pd3dDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &g_pPixelShader);
 	pPSBlob->Release();
 	if (FAILED(hr))
 		throw hr;
@@ -183,14 +113,11 @@ HRESULT InitMesh()
 	D3D11_SUBRESOURCE_DATA InitData;
 	ZeroMemory(&InitData, sizeof(InitData));
 	InitData.pSysMem = vertices;
-	hr = g_pd3dDevice->CreateBuffer(&bd, &InitData, &g_pVertexBuffer);
+	hr = device->g_pd3dDevice->CreateBuffer(&bd, &InitData, &g_pVertexBuffer);
 	if (FAILED(hr))
 		throw hr;
 
-	// Set vertex buffer
-	UINT stride = sizeof(SimpleVertex);
-	UINT offset = 0;
-	g_pImmediateContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
+	
 
 	// Create index buffer
 	// Create vertex buffer
@@ -220,36 +147,29 @@ HRESULT InitMesh()
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	InitData.pSysMem = indices;
-	hr = g_pd3dDevice->CreateBuffer(&bd, &InitData, &g_pIndexBuffer);
+	hr = device->g_pd3dDevice->CreateBuffer(&bd, &InitData, &g_pIndexBuffer);
 	if (FAILED(hr))
 		throw hr;
-
-	// Set index buffer
-	g_pImmediateContext->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-
-	// Set primitive topology
-	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	
 
 	// Create the constant buffers
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.ByteWidth = sizeof(CBNeverChanges);
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags = 0;
-	hr = g_pd3dDevice->CreateBuffer(&bd, nullptr, &g_pCBNeverChanges);
+	hr = device->g_pd3dDevice->CreateBuffer(&bd, nullptr, &g_pCBNeverChanges);
 	if (FAILED(hr))
 		throw hr;
 
 	bd.ByteWidth = sizeof(CBChangeOnResize);
-	hr = g_pd3dDevice->CreateBuffer(&bd, nullptr, &g_pCBChangeOnResize);
+	hr = device->g_pd3dDevice->CreateBuffer(&bd, nullptr, &g_pCBChangeOnResize);
 	if (FAILED(hr))
 		throw hr;
 
 	bd.ByteWidth = sizeof(CBChangesEveryFrame);
-	hr = g_pd3dDevice->CreateBuffer(&bd, nullptr, &g_pCBChangesEveryFrame);
+	hr = device->g_pd3dDevice->CreateBuffer(&bd, nullptr, &g_pCBChangesEveryFrame);
 	if (FAILED(hr))
 		throw hr;
-
-
 
 	// Create the sample state
 	D3D11_SAMPLER_DESC sampDesc;
@@ -261,17 +181,60 @@ HRESULT InitMesh()
 	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
 	sampDesc.MinLOD = 0;
 	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
-	hr = g_pd3dDevice->CreateSamplerState(&sampDesc, &g_pSamplerLinear);
+	hr = device->g_pd3dDevice->CreateSamplerState(&sampDesc, &g_pSamplerLinear);
 	if (FAILED(hr))
 		throw hr;
 }
+
+void Mesh::renderObject(DirectX::XMMATRIX mundo, DirectX::XMMATRIX vista, DirectX::XMMATRIX projection, ID3D11ShaderResourceView* textura, Device* device)
+{	
+	CBNeverChanges cbNeverChanges;
+    cbNeverChanges.mView = XMMatrixTranspose( vista );
+    device->g_pImmediateContext->UpdateSubresource( g_pCBNeverChanges, 0, nullptr, &cbNeverChanges, 0, 0 );
+
+	CBChangeOnResize cbChangesOnResize;
+    cbChangesOnResize.mProjection = XMMatrixTranspose( projection );
+    device->g_pImmediateContext->UpdateSubresource( g_pCBChangeOnResize, 0, nullptr, &cbChangesOnResize, 0, 0 );
+
+	DirectX::XMFLOAT4  g_vMeshColor( 1.0, 1.0f, 1.0f, 1.0f );
+
+	CBChangesEveryFrame cb;
+    cb.mWorld = XMMatrixTranspose( mundo );
+    cb.vMeshColor = g_vMeshColor;
+    device->g_pImmediateContext->UpdateSubresource( g_pCBChangesEveryFrame, 0, nullptr, &cb, 0, 0 );
+
+	// Set the input layout
+	device->g_pImmediateContext->IASetInputLayout(g_pVertexLayout);
+
+	// Set vertex buffer
+	UINT stride = sizeof(SimpleVertex);
+	UINT offset = 0;
+	device->g_pImmediateContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
+		
+	// Set index buffer
+	device->g_pImmediateContext->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+
+	// Set primitive topology
+	device->g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	device->g_pImmediateContext->VSSetShader( g_pVertexShader, nullptr, 0 );
+    device->g_pImmediateContext->VSSetConstantBuffers( 0, 1, &g_pCBNeverChanges );
+    device->g_pImmediateContext->VSSetConstantBuffers( 1, 1, &g_pCBChangeOnResize );
+    device->g_pImmediateContext->VSSetConstantBuffers( 2, 1, &g_pCBChangesEveryFrame );
+    device->g_pImmediateContext->PSSetShader( g_pPixelShader, nullptr, 0 );
+    device->g_pImmediateContext->PSSetConstantBuffers( 2, 1, &g_pCBChangesEveryFrame );
+	device->g_pImmediateContext->PSSetShaderResources( 0, 1, &textura );
+    device->g_pImmediateContext->PSSetSamplers( 0, 1, &g_pSamplerLinear );
+    device->g_pImmediateContext->DrawIndexed( 36, 0, 0 );
+}
+
 
 //--------------------------------------------------------------------------------------
 // Helper for compiling shaders with D3DCompile
 //
 // With VS 11, we could load up prebuilt .cso files instead...
 //--------------------------------------------------------------------------------------
-HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
+HRESULT Mesh::CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
 {
 	HRESULT hr = S_OK;
 
